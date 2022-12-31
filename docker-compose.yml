@@ -1,0 +1,28 @@
+
+version: "3"
+# creating couchbase docker compose files
+# define couchbase 1
+services:
+  couchbase:
+  # get the image from the couchbase/server
+    image: couchbase:community-6.5.1
+    volumes:
+      - ~/couchbase:/opt/couchbase/var
+  # define our application ports
+    ports:
+      - 8091:8091
+      - 8092:8092 
+      - 8093:8093 
+      - 11210:11210
+  # sqlserver:
+  #   image: mcr.microsoft.com/mssql/server:2022-latest
+  #   user: '0:0'
+  #   container_name: sqlserver2019
+  #   ports:
+  #     - 1433:1433
+  #   environment:
+  #     SA_PASSWORD: "!wirtrack!"
+  #     ACCEPT_EULA: "Y"
+  #     MSSQL_PID: Express
+  #   volumes:
+  #     - ~/docker/sqlserver-data:/var/opt/mssql
