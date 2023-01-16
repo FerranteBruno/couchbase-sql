@@ -1,28 +1,36 @@
-
 version: "3"
-# creating couchbase docker compose files
-# define couchbase 1
 services:
-  couchbase:
-  # get the image from the couchbase/server
-    image: couchbase:community-6.5.1
+  sonarqube:
+    image: sonarqube:community
+    hostname: sonarqube
+    container_name: sonarqube
+    depends_on:
+      - db
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://db:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: sonar
     volumes:
-      - ~/couchbase:/opt/couchbase/var
-  # define our application ports
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
     ports:
-      - 8091:8091
-      - 8092:8092 
-      - 8093:8093 
-      - 11210:11210
-  # sqlserver:
-  #   image: mcr.microsoft.com/mssql/server:2022-latest
-  #   user: '0:0'
-  #   container_name: sqlserver2019
-  #   ports:
-  #     - 1433:1433
-  #   environment:
-  #     SA_PASSWORD: "!wirtrack!"
-  #     ACCEPT_EULA: "Y"
-  #     MSSQL_PID: Express
-  #   volumes:
-  #     - ~/docker/sqlserver-data:/var/opt/mssql
+      - "9099:9099"
+  db:
+    image: postgres:13
+    hostname: postgresql
+    container_name: postgresql
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+      POSTGRES_DB: sonar
+    volumes:
+      - postgresql:/var/lib/postgresql
+      - postgresql_data:/var/lib/postgresql/data
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  postgresql:
+  postgresql_data:
